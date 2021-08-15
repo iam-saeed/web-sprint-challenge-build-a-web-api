@@ -19,9 +19,12 @@ router.get('/:id', (req, res) => {
     const  id  = req.params.id;
    
     Project.get(id)
-    
-    .then(project => {
-        res.status(200).json(project)
+    .then(id => {
+        if(!id){
+            res.status(404).json({ message: 'no id found'})
+        } else {
+            res.status(200).json(id)
+        }
     })
     .catch(error => {
         res.status(404).json(error)
@@ -32,6 +35,7 @@ router.get('/:id/actions', (req, res) => {
     const { id } = req.params
     Project.getProjectActions(id)
     .then(actions => {
+        
         res.status(200).json(actions)
     })
     .catch(error => {
@@ -54,13 +58,14 @@ router.put("/:id", (req, res) => {
     const { id } = req.params
 
     Project.update(id, changes)
-    .then(project => {
-        res.status(200).json(project)
+    .then((project) => {
+        if(!project.body.name || !project.body.description){
+            return res.status(400).json({ message: 'sorry'})
+        } else {
+            res.status(200).json(project)
+        }
     })
     .catch(error => {
-        if(!changes.name || !changes.description){
-            return res.status(400).json({ message: error.message})
-        }
         res.status(400).json({ message: error.message})
     })
 })
@@ -68,9 +73,12 @@ router.put("/:id", (req, res) => {
 router.delete("/:id", (req, res) => {
     const  id  = req.params.id
     Project.remove(id)
-    .then(() => {
-        
-        res.status(200).json({ message: "Delete complete" })
+    .then((id) => {
+        if(!id){
+            res.status(404).json({ message: 'no id found'})
+        } else {
+            res.status(200).json({ message: "Delete complete" })
+        }
     })
     .catch(error => {
         res.status(404).json({ message: error.message })

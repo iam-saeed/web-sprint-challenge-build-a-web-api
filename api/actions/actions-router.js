@@ -7,7 +7,7 @@ const router = express.Router();
 const Action = require("./actions-model.js");
 
 router.get("/", (req, res) => { 
-    Action.get(req.query)
+    Action.get(req.params.id)
     .then(actions => {
         res.status(200).json(actions)
     })
@@ -26,7 +26,20 @@ router.get("/:id", validateUserId, (req, res) => {
     })
 })
 
-router.post("/", validatePost, (req, res) => {
+router.put("/:id", (req, res) => {
+    const changes = req.body
+    const { id } = req.params
+
+    Action.update(id, changes)
+    .then(project => {
+        res.status(201).json(project)
+    })
+    .catch(error => {
+        res.status(400).json({ message: error.message})
+    })
+})
+
+router.post("/", (req, res) => {
     Action.insert(req.body)
     .then(post => {
         res.status(201).json(post)
