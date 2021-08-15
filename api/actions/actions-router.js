@@ -1,5 +1,6 @@
 // Write your "actions" router here!
-const express = require('express')
+const express = require('express');
+const { validateUserId, validatePost } = require('./actions-middlware.js');
 
 const router = express.Router();
 
@@ -15,17 +16,17 @@ router.get("/", (req, res) => {
     })
 })
 
-router.get("/:id", (req, res) => {
+router.get("/:id", validateUserId, (req, res) => {
     Action.get(req.params.id)
     .then(actionId => {
         res.status(200).json(actionId)
     })
-    .catch(error => {
+    .catch(() => {
         res.status(404).json({ message: 'There is no action with this id' })
     })
 })
 
-router.post("/", (req, res) => {
+router.post("/", validatePost, (req, res) => {
     Action.insert(req.body)
     .then(post => {
         res.status(201).json(post)
