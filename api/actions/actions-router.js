@@ -6,14 +6,14 @@ const router = express.Router();
 
 const Action = require("./actions-model.js");
 
-router.get("/", (req, res) => {
+router.get("/", (req, res) => { 
     Action.get(req.query)
     .then(actions => {
         res.status(200).json(actions)
     })
     .catch(error => {
         res.status(500).json({ message: error.message })
-    })
+    }) 
 })
 
 router.get("/:id", validateUserId, (req, res) => {
